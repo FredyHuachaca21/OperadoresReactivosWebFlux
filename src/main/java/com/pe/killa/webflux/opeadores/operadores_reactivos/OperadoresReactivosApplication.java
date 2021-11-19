@@ -27,12 +27,21 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 	}
 
 	public void crearFlux(){
+		/* Método fromIterable funciona para Flux */
 		Flux<String> fluxNombres = Flux.fromIterable(nombres);
 		fluxNombres.subscribe(System.out::println);
 	}
 
+	public void fluxAmono(){
+		/*Proceso inverso para transformar de Flux a Mono*/
+		/*OJO la PIOJO -> DE MONO A FLUX NO SE PUEDE REALIZAR LA TRANSFORMACIÓN*/
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+		fluxNombres.collectList().subscribe(System.out::println);
+		/*Se emite todo el elemento de la lista como un solo bloque*/
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-		crearFlux();
+		fluxAmono();
 	}
 }
