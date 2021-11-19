@@ -69,8 +69,18 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 
 	}
 
+	public void op_range(){
+
+		/*Operador de rango*/
+		Flux<Integer> fluxRango = Flux.range(0, 10);
+		fluxRango
+				.doOnNext(y -> log.info("Antes: " + y))
+			.map(x -> x +1)
+				.subscribe(x -> log.info("Después: " + x));
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-		op_flatMap();
+		op_range();
 	}
 }
