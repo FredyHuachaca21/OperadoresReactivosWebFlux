@@ -8,8 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
 
 @SpringBootApplication
 public class OperadoresReactivosApplication implements CommandLineRunner {
@@ -79,8 +81,19 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 				.subscribe(x -> log.info("Después: " + x));
 	}
 
+	public void op_delayElements() throws InterruptedException {
+		Flux.range(0, 10)
+				.delayElements(Duration.ofSeconds(2))
+				.doOnNext(System.out::println)
+				.subscribe();
+
+		Thread.sleep(10000);
+	}
+
+
+
 	@Override
 	public void run(String... args) throws Exception {
-		op_range();
+		op_delayElements();
 	}
 }
