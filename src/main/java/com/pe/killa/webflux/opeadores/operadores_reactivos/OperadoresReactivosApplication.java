@@ -51,6 +51,7 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 		/*Operador map transforma el flujo de elemento*/
 		Flux<String> fluxNombres = Flux.fromIterable(nombres);
 		fluxNombres.map(String::toUpperCase)
+				.map(x -> "Nombres: " + x)
 				.subscribe(System.out::println);
 	}
 
