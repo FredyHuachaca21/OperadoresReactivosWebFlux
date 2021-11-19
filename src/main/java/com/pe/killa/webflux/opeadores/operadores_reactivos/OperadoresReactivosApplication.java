@@ -90,10 +90,21 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 		Thread.sleep(10000);
 	}
 
+	public void op_zipWith(){
+		List<String> platos =
+				Arrays.asList("Ceviche", "Ají de gallina", "Arroz con pollo", "Causa",
+						"Tallarines Rojos", "Estofoado de polllo", "Lomo saltado");
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+		Flux<String> fxPlatos = Flux.fromIterable(platos);
+
+		fluxNombres
+				.zipWith(fxPlatos, (n, p) -> String.format("Flux1: %s, Flux2: %s", n, p))
+				.subscribe(x -> log.info(x));
+	}
 
 
 	@Override
 	public void run(String... args) throws Exception {
-		op_delayElements();
+		op_zipWith();
 	}
 }
