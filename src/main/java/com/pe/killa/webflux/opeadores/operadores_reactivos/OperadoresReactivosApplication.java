@@ -40,8 +40,15 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 		/*Se emite todo el elemento de la lista como un solo bloque*/
 	}
 
+	public void op_doOnNext(){
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+		/*Valida o emite el proceso por cada elemento*/
+		fluxNombres.doOnNext(System.out::println)
+				.subscribe();
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-		fluxAmono();
+		op_doOnNext();
 	}
 }
