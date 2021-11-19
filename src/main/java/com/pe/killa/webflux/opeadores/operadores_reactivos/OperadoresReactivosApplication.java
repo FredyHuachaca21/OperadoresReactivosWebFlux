@@ -55,8 +55,22 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 				.subscribe(System.out::println);
 	}
 
+	public void op_flatMap(){
+		/*Sirve para transformar elementos*/
+		/*diferencia con map, el es sintaxis de RETORNO de variable*/
+		/*tiene que ser explícito para indicar el tipo de retorno Ejm: Mono.just(xxxxx)*/
+		Mono.just("Fredy")
+				.flatMap(x -> Mono.just(21))
+				.subscribe(System.out::println);
+
+		/*Mono.just("Fredy")
+				.flatMap(x -> Mono.just(10))
+				.subscribe(f -> log.info(f.toString()));*/
+
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-		op_map();
+		op_flatMap();
 	}
 }
