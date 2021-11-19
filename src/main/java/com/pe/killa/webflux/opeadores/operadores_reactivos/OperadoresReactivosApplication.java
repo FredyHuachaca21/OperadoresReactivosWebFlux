@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -25,8 +26,13 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 	monoNum.subscribe(x -> log.info("Número: " + x));
 	}
 
+	public void crearFlux(){
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+		fluxNombres.subscribe(System.out::println);
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-		crearMono();
+		crearFlux();
 	}
 }
