@@ -11,7 +11,6 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
 
 @SpringBootApplication
 public class OperadoresReactivosApplication implements CommandLineRunner {
@@ -52,9 +51,7 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 	public void op_map(){
 		/*Operador map transforma el flujo de elemento*/
 		Flux<String> fluxNombres = Flux.fromIterable(nombres);
-		fluxNombres.map(String::toUpperCase)
-				.map(x -> "Nombres: " + x)
-				.subscribe(System.out::println);
+		fluxNombres.map(String::toUpperCase).map(x -> "Nombres: " + x).subscribe(System.out::println);
 	}
 
 	public void op_flatMap(){
@@ -102,9 +99,26 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 				.subscribe(x -> log.info(x));
 	}
 
+	public void op_merge(){
+		List<String> platos =
+				Arrays.asList("Ceviche", "Ají de gallina", "Arroz con pollo", "Causa",
+						"Tallarines Rojos", "Estofoado de polllo", "Lomo saltado");
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+		Flux<String> fxPlatos = Flux.fromIterable(platos);
+
+		Flux.merge(fluxNombres, fxPlatos)
+				.map(x -> "Elementos: " + x)
+				.subscribe(System.out::println);
+
+		/*Flux<String> fxCombinado = fluxNombres.mergeWith(fxPlatos);
+		fxCombinado.subscribe(System.out::println);*/
+	}
+
+
+
 
 	@Override
 	public void run(String... args) throws Exception {
-		op_zipWith();
+		op_merge();
 	}
 }
