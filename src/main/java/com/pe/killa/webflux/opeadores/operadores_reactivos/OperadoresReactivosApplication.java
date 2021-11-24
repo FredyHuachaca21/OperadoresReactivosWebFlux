@@ -125,10 +125,14 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 		fluxNombres.takeLast(3).subscribe(System.out::println);
 	}
 
-
+	public void op_take(){
+		/*Operación que obtiene x cantidad de los primeros elementos de un flujo de datos*/
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+		fluxNombres.take(2).subscribe(System.out::println);
+	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		op_takeLast();
+		op_take();
 	}
 }
