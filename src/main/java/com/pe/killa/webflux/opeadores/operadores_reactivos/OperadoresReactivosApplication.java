@@ -152,8 +152,20 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 				.subscribe(log::info);
 	}
 
+	public void op_retry(){
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+
+		fluxNombres.doOnNext(n -> {
+			log.info("Intentando....");
+			throw new ArithmeticException("Error provocado");
+		})
+				.retry(3)
+				.onErrorReturn("Error!")
+				.subscribe(log::info);
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-		op_onErrorReturn();
+		op_retry();
 	}
 }
