@@ -9,6 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -131,8 +132,16 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 		fluxNombres.take(2).subscribe(System.out::println);
 	}
 
+	public void op_defaultIfEmpty(){
+		/*Devuelve un mensaje por defecto si la Lista no contiene elementos*/
+		nombres = new ArrayList<>();
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+		fluxNombres.defaultIfEmpty("No hay elementos en la consulta")
+				.subscribe(log::info);
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-		op_take();
+		op_defaultIfEmpty();
 	}
 }
