@@ -114,11 +114,16 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 		fxCombinado.subscribe(System.out::println);*/
 	}
 
+	public void op_filter(){
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+	fluxNombres.filter(x -> x.startsWith("G")).subscribe(System.out::println);
+	}
+
 
 
 
 	@Override
 	public void run(String... args) throws Exception {
-		op_merge();
+		op_filter();
 	}
 }
