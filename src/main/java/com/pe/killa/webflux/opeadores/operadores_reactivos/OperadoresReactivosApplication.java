@@ -140,8 +140,20 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 				.subscribe(log::info);
 	}
 
+	public void op_onErrorReturn(){
+		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+		fluxNombres.doOnNext(x ->{
+			throw new ArithmeticException("Error provocado");
+		})
+				/*Error capturado y tratado como corresponde*/
+				.onErrorMap(x -> new Exception("Error capturado"))
+				/*Captura de error convencional*/
+				//.onErrorReturn("Ocurrió un error!")
+				.subscribe(log::info);
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-		op_defaultIfEmpty();
+		op_onErrorReturn();
 	}
 }
