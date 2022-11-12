@@ -34,7 +34,7 @@ class OperadoresReactivosApplicationTests {
 		monoFecha.subscribe(System.out::println);
 
 		StepVerifier.create(monoFecha)
-				.expectNext(LocalDate.now())
+				.expectNext(LocalDate.of(2022,11, 12)) // insert current date
 				.expectComplete()
 				.verify();
 	}
