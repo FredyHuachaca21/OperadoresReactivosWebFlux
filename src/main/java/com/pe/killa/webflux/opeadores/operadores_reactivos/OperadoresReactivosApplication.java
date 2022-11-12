@@ -9,6 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class OperadoresReactivosApplication implements CommandLineRunner {
 
 	private static final Logger log = LoggerFactory.getLogger(OperadoresReactivosApplication.class);
-	private static List<String> nombres = Arrays.asList("Fredy", "Gianella", "Frank", "Alex", "Marck", "Aracely", "Blanca");
+	private static List<String> nombres = Arrays.asList("Fredy", "Gianella", "Frank", "Alex", "Marck", "Aracely", "Blanca", "juan");
 
 	public static void main(String[] args) {
 		SpringApplication.run(OperadoresReactivosApplication.class, args);
@@ -25,7 +26,21 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 
 	public void crearMono(){
 	Mono<Integer> monoNum =	Mono.just(10);
-	monoNum.subscribe(x -> log.info("Número: " + x));
+	//monoNum.subscribe(System.out::println);
+		monoNum.subscribe(x -> System.out.println("mono: " + x));
+		monoNum.subscribe(x -> System.out.println(x));
+		monoNum.subscribe(System.out::println);
+		monoNum.subscribe(x -> log.info("mono: " + x));
+	}
+
+	public void crearMonoFecha(){
+	Mono<LocalDate> monoNum =	Mono.just(LocalDate.now());
+	monoNum.subscribe(System.out::println);
+	monoNum.subscribe(date -> log.info("La fecha actual es: " + date));
+	}
+	public void monoLista(){
+	Mono<List<String>> monoNum = Mono.just(nombres);
+	monoNum.subscribe(System.out::println);
 	}
 
 	public void crearFlux(){
@@ -36,7 +51,7 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 
 	public void fluxAmono(){
 		/*Proceso inverso para transformar de Flux a Mono*/
-		/*OJO la PIOJO -> DE MONO A FLUX NO SE PUEDE REALIZAR LA TRANSFORMACIÓN*/
+		/*OJO al PIOJO -> DE MONO A FLUX NO SE PUEDE REALIZAR LA TRANSFORMACIÓN*/
 		Flux<String> fluxNombres = Flux.fromIterable(nombres);
 		fluxNombres.collectList().subscribe(System.out::println);
 		/*Se emite todo el elemento de la lista como un solo bloque*/
@@ -46,13 +61,18 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 		Flux<String> fluxNombres = Flux.fromIterable(nombres);
 		/*Valida o emite el proceso por cada elemento*/
 		fluxNombres.doOnNext(System.out::println)
-				.subscribe();
+				.subscribe(System.out::println);
 	}
 
 	public void op_map(){
 		/*Operador map transforma el flujo de elemento*/
 		Flux<String> fluxNombres = Flux.fromIterable(nombres);
-		fluxNombres.map(String::toUpperCase).map(x -> "Nombres: " + x).subscribe(System.out::println);
+		fluxNombres
+				.doOnNext(System.out::println)
+				.map(String::toUpperCase)
+				.doOnNext(System.out::println)
+				.map(x -> "Nombres: " + x)
+				.subscribe(System.out::println);
 	}
 
 	public void op_flatMap(){
@@ -60,12 +80,16 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 		/*diferencia con map, el es sintaxis de RETORNO de variable*/
 		/*tiene que ser explícito para indicar el tipo de retorno Ejm: Mono.just(xxxxx)*/
 		Mono.just("Fredy")
-				.flatMap(x -> Mono.just(21))
+				.flatMap(x -> Mono.just(x.length()))
 				.subscribe(System.out::println);
 
-		/*Mono.just("Fredy")
+//		Mono.just("Fredy")
+//				.flatMap(x -> Mono.just(x.length()))
+//				.subscribe(System.out::println);
+
+		Mono.just("Fredy")
 				.flatMap(x -> Mono.just(10))
-				.subscribe(f -> log.info(f.toString()));*/
+				.subscribe(f -> log.info(f.toString()));
 
 	}
 
@@ -81,11 +105,11 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 
 	public void op_delayElements() throws InterruptedException {
 		Flux.range(0, 10)
-				.delayElements(Duration.ofSeconds(2))
+				.delayElements(Duration.ofSeconds(1))
 				.doOnNext(System.out::println)
 				.subscribe();
 
-		Thread.sleep(10000);
+		Thread.sleep(6000);
 	}
 
 	public void op_zipWith(){
@@ -97,6 +121,7 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 
 		fluxNombres
 				.zipWith(fxPlatos, (n, p) -> String.format("Flux1: %s, Flux2: %s", n, p))
+				.map(x -> x.toString())
 				.subscribe(x -> log.info(x));
 	}
 
@@ -117,7 +142,7 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 
 	public void op_filter(){
 		Flux<String> fluxNombres = Flux.fromIterable(nombres);
-	fluxNombres.filter(x -> x.startsWith("G")).subscribe(System.out::println);
+	fluxNombres.filter(x -> x.startsWith("F")).subscribe(System.out::println);
 	}
 
 	public void op_takeLast(){
@@ -142,13 +167,14 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 
 	public void op_onErrorReturn(){
 		Flux<String> fluxNombres = Flux.fromIterable(nombres);
+
 		fluxNombres.doOnNext(x ->{
 			throw new ArithmeticException("Error provocado");
 		})
 				/*Error capturado y tratado como corresponde*/
 				.onErrorMap(x -> new Exception("Error capturado"))
 				/*Captura de error convencional*/
-				//.onErrorReturn("Ocurrió un error!")
+				.onErrorReturn("Ocurrió un error!")
 				.subscribe(log::info);
 	}
 
