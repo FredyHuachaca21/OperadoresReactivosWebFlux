@@ -192,6 +192,7 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		op_retry();
+		//Insert method to evaluate
+		//op_retry();
 	}
 }
