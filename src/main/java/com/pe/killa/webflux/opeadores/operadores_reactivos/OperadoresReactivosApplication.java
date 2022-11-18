@@ -193,6 +193,6 @@ public class OperadoresReactivosApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		//Insert method to evaluate
-		//op_retry();
+		//fluxAmono();
 	}
 }

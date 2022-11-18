@@ -30,4 +30,20 @@ class OperadoresReactivosApplicationTest {
 
 
     }
+
+    @Test
+    void fluxAmono() {
+        //GIVEN
+        List<String> nombres = Arrays.asList("Fredy", "Edgar");
+        //WHEN
+        Flux<String> nombre = Flux.fromIterable(nombres);
+        Mono<List<String>> monoList = nombre.collectList();
+        monoList.subscribe(System.out::println);
+        //THEN
+        StepVerifier.create(monoList)
+                .expectNext(Arrays.asList("Fredy", "Edgar"))
+                .expectNext(Arrays.asList())
+                .expectNextCount(1)
+                .expectComplete();
+    }
 }
